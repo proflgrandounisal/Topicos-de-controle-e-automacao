@@ -51,9 +51,3 @@ python aula3_modelagem.py
 ## Próximos Passos (Sprint 2)
 
 A aprovação da arquitetura desenvolvida nesta etapa é pré-requisito para o avanço do projeto. Os modelos validados servirão de ambiente de testes para a Sprint 2, onde implementaremos as lógicas de Controle Avançado, iniciando pelos algoritmos Liga/Desliga com Histerese e avançando para a estrutura completa do PID.
-
-```
-
-Com o repositório devidamente documentado e o material da aula 05/03 finalizado, gostaria que eu iniciasse o rascunho dos conceitos teóricos (Liga/Desliga e Histerese) para a aula da semana que vem (12/03)?
-
-```
