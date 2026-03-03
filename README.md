@@ -1,78 +1,59 @@
-# Laboratório Prático: Engenharia de Sistemas Cyber-Físicos
+# Tópicos de Controle e Automação: Simulações em Python
 
-Este repositório contém os scripts de simulação utilizados nas aulas práticas da disciplina de Sistemas Cyber-Físicos. O objetivo destes códigos é demonstrar, de forma visual e matemática, os desafios de conectar software (algoritmos) ao mundo físico (hardware e instrumentação).
+Repositório oficial de apoio à disciplina de Tópicos de Controle e Automação (Engenharia da Computação), focado no desenvolvimento do projeto prático **SmartFlow**.
 
-## Pré-requisitos
+**Docente:** Prof. Dr. Leonardo Grando  
+**Período:** 1º Semestre / 2026  
 
-Para executar as simulações em Python, certifique-se de ter as seguintes bibliotecas instaladas no seu ambiente:
+## Sobre o Repositório
+
+Este repositório contém os scripts desenvolvidos em sala de aula para demonstrar a aplicação da teoria de controle em sistemas cibernéticos. O objetivo é fornecer uma base em código (Python) para que os Squads possam modelar, simular e validar a arquitetura de seus projetos (TCC e SmartFlow) antes da implementação em hardware físico.
+
+## Contexto: Metodologia PBL
+
+O desenvolvimento segue a divisão do projeto em Sprints. Os códigos atuais dão suporte à **Sprint 1: Modelagem e Arquitetura**, permitindo a abstração de sistemas físicos ou arquiteturas de software (Plantas) em modelos matemáticos discretos (Gêmeos Digitais).
+
+## Estrutura de Arquivos
+
+A evolução dos scripts acompanha a ementa da disciplina:
+
+* **`aula1.py`**: Simulação introdutória comparando o comportamento de um sistema operando em Malha Aberta versus Malha Fechada perante uma perturbação externa.
+* **`aula2_sensores.py`**: Experimento prático sobre Instrumentação Industrial. Demonstra o impacto do ruído analógico, da perda de resolução (quantização digital) e do atraso de sensores discretos na leitura da Variável de Processo (PV).
+* **`aula3_modelagem.py`**: Implementação da arquitetura de um Diagrama de Blocos utilizando Programação Orientada a Objetos (OOP).
+
+## Foco Teórico: Modelagem em Tempo Discreto (`aula3_modelagem.py`)
+
+O script da Aula 3 é o alicerce metodológico para as simulações dos Squads. Ele divide o sistema de controle em quatro classes independentes, refletindo com exatidão matemática o fluxo de sinal de um Diagrama de Blocos:
+
+1. **`Planta`**: Representa o fenômeno dinâmico controlado. Utiliza uma Equação de Diferenças para calcular o estado futuro com base na inércia do sistema e no tempo de amostragem ($\Delta t$).
+   $$h_{k+1} = h_k + \frac{(Q_{in} - Q_{out}) \cdot \Delta t}{A}$$
+2. **`Sensor`**: Abstrai a leitura da grandeza física (PV), atuando como a fronteira de conversão de dados.
+3. **`Atuador`**: Converte o esforço computacional (Sinal de Controle, $u(t)$) em ação de engenharia, respeitando os limites operacionais físicos (saturação).
+4. **`Controlador`**: O núcleo algorítmico que calcula o Erro em tempo real ($E = SP - PV$) e define a ação corretiva matemática.
+
+## Requisitos e Execução
+
+Para executar as simulações, é necessário um ambiente Python 3 configurado com as bibliotecas de processamento numérico e plotagem gráfica.
+
+**Dependências:**
+```bash
+pip install numpy matplotlib
+
+```
+
+**Execução:**
 
 ```bash
-pip install matplotlib numpy
+python aula3_modelagem.py
 
 ```
 
----
+## Próximos Passos (Sprint 2)
 
-## 1. Simulação de Malha Aberta vs. Malha Fechada (`aula1.py`)
-
-Este script demonstra a diferença fundamental entre um sistema de controle cego (Malha Aberta) e um sistema inteligente com realimentação (Malha Fechada utilizando controle Proporcional).
-
-### Como usar
-
-Execute o arquivo no terminal. O script solicitará alguns parâmetros iniciais de configuração (você pode pressionar `Enter` para usar os valores padrão recomendados):
-
-1. **Setpoint:** O nível desejado para o tanque.
-2. **Ganho (Kp):** A agressividade da resposta do controlador.
-3. **Vazamento Inicial:** A perturbação física base do sistema.
-4. **Tempo do Incidente:** O momento (em segundos) em que uma falha física ocorrerá.
-5. **Novo Vazamento:** A gravidade do incidente.
-
-```bash
-python aula1.py
+A aprovação da arquitetura desenvolvida nesta etapa é pré-requisito para o avanço do projeto. Os modelos validados servirão de ambiente de testes para a Sprint 2, onde implementaremos as lógicas de Controle Avançado, iniciando pelos algoritmos Liga/Desliga com Histerese e avançando para a estrutura completa do PID.
 
 ```
 
-### O que observar durante a execução
-
-* **O Gráfico em Tempo Real:** Observe como a linha da Malha Aberta falha miseravelmente ao tentar manter o nível após o tempo do incidente (linha vertical laranja). Ela não percebe a mudança no ambiente.
-* **A Correção do Erro:** A Malha Fechada identificará a queda de nível e aumentará a potência da bomba automaticamente para retornar ao Setpoint.
-* **O Efeito do Ganho (Kp):** Reinicie o script e teste valores diferentes de Kp (ex: 1.0 e 15.0). Note que um Kp muito alto pode causar oscilações bruscas, enquanto um Kp muito baixo torna o sistema lento.
-
----
-
-## 2. O Problema da Instrumentação (`aula2_sensores.py`)
-
-O algoritmo de controle não enxerga o mundo real; ele enxerga o que o sensor diz a ele. Este script roda no terminal e simula a leitura de uma mesma variável de processo (nível da água subindo) através de três tipos diferentes de instrumentos.
-
-### Como usar
-
-Basta executar o arquivo no terminal. Ele imprimirá os dados em formato de tabela continuamente. Para interromper, pressione `Ctrl+C`.
-
-```bash
-python aula2_sensores.py
+Com o repositório devidamente documentado e o material da aula 05/03 finalizado, gostaria que eu iniciasse o rascunho dos conceitos teóricos (Liga/Desliga e Histerese) para a aula da semana que vem (12/03)?
 
 ```
-
-### O que observar durante a execução
-
-* **A Realidade vs. Analógico:** Compare a coluna da Física com a coluna do Sensor Analógico. O analógico sofre oscilações aleatórias simulando Ruído Eletromagnético (EMI). Se um PID receber este sinal bruto, o atuador vibrará descontroladamente.
-* **A Ilusão do Digital:** Observe a coluna do Sensor Digital. Devido à limitação de resolução (conversão A/D), ele fica travado no mesmo valor por vários segundos, mesmo com a água subindo, e depois "pula" bruscamente.
-* **A Lógica Discreta:** A última coluna mostra um sensor de segurança (chave boia) que ignora totalmente a medição contínua e apenas avisa (0 ou 1) se um limite crítico foi atingido.
-
----
-
-## 3. Simulação de Comportamento Emergente (NetLogo)
-
-Para complementar o estudo de controle discreto, utilizaremos um modelo clássico de termostato construído em NetLogo. Ele simula a termodinâmica de um ambiente e a atuação de um sistema de Malha Fechada simples (ON/OFF).
-
-**Acesse o simulador diretamente pelo navegador:**
-[NetLogo Web: Thermostat Model](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Chemistry%20&%20Physics/Thermostat.nlogox)
-
-### O que observar no NetLogo
-
-1. Altere o *Target Temperature* (Setpoint).
-2. Observe o comportamento da variável manipulada (o aquecedor ligando e desligando).
-3. Note que, por ser um controle discreto (ON/OFF), a temperatura ambiente nunca estabiliza perfeitamente em uma linha reta; ela sempre oscila em torno do Setpoint (Histerese).
-
-```
-
